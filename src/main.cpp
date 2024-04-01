@@ -1,5 +1,6 @@
 #include "vector3.h"
 #include "icosphere.h"
+#include "face.h"
 #include <iostream>
 
 int main() {
@@ -9,6 +10,7 @@ int main() {
 
 	Icosphere icosphere;
 	icosphere.subdivide(8);
+	Face face;
 
 	return 0;
 }
