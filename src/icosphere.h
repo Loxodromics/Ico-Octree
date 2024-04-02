@@ -23,11 +23,18 @@ private:
 	/// Assignment operator
 	Icosphere& operator=(const Icosphere& other);
 
+	void initializeBaseIcosahedron();
+
 	/// Helper methods
-	int addVertex(const Vector3& vertex);
-	void addFace(int v1, int v2, int v3);
+	int addVertex(const Vector3 vertex);
+	std::shared_ptr<Face> addFace(int v1, int v2, int v3);
 
 	int getOrCreateMidpointIndex(int index1, int index2); /// Helper to handle midpoint vertices
+	void subdivideFace(std::shared_ptr<Face> face, int currentLevel, int targetLevel);
+
+	void setNeighbors();
+	void setNeighborsForBaseFaces();
+	void setNeighborsForFace(std::shared_ptr<Face> face);
 
 	/// Data
 	std::vector<Vector3> vertices;

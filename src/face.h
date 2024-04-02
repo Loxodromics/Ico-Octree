@@ -24,8 +24,9 @@ public:
 	void setNeighbor(int Index, std::shared_ptr<Face> neighbor);
 	std::shared_ptr<Face> getNeighbor(int index) const;
 	void setChild(int Index, std::shared_ptr<Face> child);
+	void addChild(std::shared_ptr<Face> child);
 	std::shared_ptr<Face> getChild(int index) const;
-	std::array<std::shared_ptr<Face>, 3> getChildren() const;
+	std::array<std::shared_ptr<Face>, 4> getChildren() const;
 	void setParent(std::weak_ptr<Face> parent);
 	std::shared_ptr<Face> getParent() const; /// Gets the parent, converting the weak pointer to a shared pointer
 	void setVertexIndices(const std::array<int, 3>& indices);
@@ -36,7 +37,7 @@ private:
 	Face() = default;
 
 	/// Data
-	std::array<std::shared_ptr<Face>, 3> children;
+	std::array<std::shared_ptr<Face>, 4> children;
 	std::array<std::shared_ptr<Face>, 3> neighbors;
 	std::weak_ptr<Face> parent; /// weak_ptr for a non-owning, nullable reference to the parent
 	float data{0.0f};

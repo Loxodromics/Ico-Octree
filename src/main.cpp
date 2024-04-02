@@ -9,8 +9,7 @@ int main() {
 	std::cout << "Vector3 Created: (" << myVector.x << ", " << myVector.y << ", " << myVector.z << ")" << std::endl;
 
 	Icosphere icosphere;
-	icosphere.subdivide(8);
-	Face face;
+	icosphere.subdivide(2);
 
 	return 0;
 }

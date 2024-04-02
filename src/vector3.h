@@ -31,6 +31,7 @@ public:
 
 	// Normalize the vector
 	void normalize();
+	Vector3 normalized() const;
 };
 
 #endif // VECTOR3_H

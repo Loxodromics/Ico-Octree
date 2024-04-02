@@ -1,4 +1,6 @@
 #include "face.h"
+#include <iostream>
+
 
 Face::Face(const std::array<int, 3>& vertexIndices)
 : vertexIndices(vertexIndices) {
@@ -17,9 +19,19 @@ void Face::setNeighbor(int index, std::shared_ptr<Face> neighbor) {
 }
 
 void Face::setChild(int index, std::shared_ptr<Face> child) {
-	if (index >= 0 && index < 3) {
+	if (index >= 0 && index < 4) {
 		this->children[index] = std::move(child);
 	}
+}
+
+void Face::addChild(std::shared_ptr<Face> child) {
+	for (size_t index = 0; index < this->children.size(); ++index) {
+		if (this->children[index] == nullptr) {
+			this->setChild(index, child);
+			return;
+		}
+	}
+	std::cout << "added no child\n";
 }
 
 void Face::setParent(std::weak_ptr<Face> parent) {
@@ -49,12 +61,15 @@ std::shared_ptr<Face> Face::getChild(int index) const {
 	return nullptr;
 }
 
-std::array<std::shared_ptr<Face>, 3> Face::getChildren() const {
+std::array<std::shared_ptr<Face>, 4> Face::getChildren() const {
 	return this->children;
 }
 
 std::shared_ptr<Face> Face::getParent() const {
-	return this->parent.lock();
+	if (!this->parent.expired())
+		return this->parent.lock();
+	else
+		return nullptr;
 }
 
 std::array<int, 3> Face::getVertexIndices() const {

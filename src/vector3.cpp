@@ -43,3 +43,12 @@ void Vector3::normalize() {
 		z /= length;
 	}
 }
+
+Vector3 Vector3::normalized() const {
+	float length = sqrt(x * x + y * y + z * z);
+	if (length > 0) {
+		return Vector3(x / length, y / length, z / length);
+	} else {
+		return Vector3(x, y, z); // Return the original vector if length is 0 to avoid division by zero
+	}
+}
