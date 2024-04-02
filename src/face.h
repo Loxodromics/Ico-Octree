@@ -18,10 +18,16 @@ public:
 	Face(Face&& Other) noexcept = default;
 	Face& operator=(Face&& other) noexcept = default;
 
+	/// Equality operator to compare vertexIndices
+	bool operator==(const Face& other) const {
+		return vertexIndices == other.vertexIndices;
+	}
+
 	void setData(float value);
 	float getData() const;
 
 	void setNeighbor(int Index, std::shared_ptr<Face> neighbor);
+	void addNeighbor(std::shared_ptr<Face> neighbor);
 	std::shared_ptr<Face> getNeighbor(int index) const;
 	void setChild(int Index, std::shared_ptr<Face> child);
 	void addChild(std::shared_ptr<Face> child);

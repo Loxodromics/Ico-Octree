@@ -59,7 +59,7 @@ void Icosphere::subdivide(int levels) {
 		subdivideFace(baseFace, 0, levels);
 	}
 
-	// After subdivision, you will need to run a separate function
+	// After subdivision, we run a separate function
 	// to recursively set neighbors for each face.
 	this->setNeighbors();
 }
@@ -67,9 +67,11 @@ void Icosphere::subdivide(int levels) {
 int Icosphere::getOrCreateMidpointIndex(int index1, int index2) {
 	/// Ensure the first index is always the smaller one to avoid duplicates
 	std::pair<int, int> key(std::min(index1, index2), std::max(index1, index2));
+	std::cout << "getOrCreateMidpointIndex(" << key.first << ", " << key.second << "): ";
 
 	/// Check if this midpoint has already been created
 	if (midpointIndexCache.find(key) != midpointIndexCache.end()) {
+		std::cout << "found key: " << midpointIndexCache[key] << std::endl;
 		return midpointIndexCache[key];
 	}
 
@@ -77,6 +79,7 @@ int Icosphere::getOrCreateMidpointIndex(int index1, int index2) {
 	Vector3 midpoint = (vertices[index1] + vertices[index2]) * 0.5f;
 	midpoint.normalize();
 	int midpointIndex = addVertex(midpoint);
+	std::cout << "add vertex: " << midpointIndex << std::endl;
 
 	/// Add to cache
 	midpointIndexCache[key] = midpointIndex;
@@ -97,46 +100,46 @@ void Icosphere::initializeBaseIcosahedron() {
 	this->addVertex(Vector3(0, b, -a).normalized());  // v0
 	this->addVertex(Vector3(b, a, 0).normalized());   // v1
 	this->addVertex(Vector3(-b, a, 0).normalized());  // v2
-	this->addVertex(Vector3(0, b, a).normalized());   // v3
-	this->addVertex(Vector3(0, -b, a).normalized());  // v4
-	this->addVertex(Vector3(-a, 0, b).normalized());  // v5
-	this->addVertex(Vector3(0, -b, -a).normalized()); // v6
-	this->addVertex(Vector3(a, 0, -b).normalized());  // v7
-	this->addVertex(Vector3(a, 0, b).normalized());   // v8
-	this->addVertex(Vector3(-a, 0, -b).normalized()); // v9
-	this->addVertex(Vector3(b, -a, 0).normalized());  // v10
-	this->addVertex(Vector3(-b, -a, 0).normalized()); // v11
+	// this->addVertex(Vector3(0, b, a).normalized());   // v3
+	// this->addVertex(Vector3(0, -b, a).normalized());  // v4
+	// this->addVertex(Vector3(-a, 0, b).normalized());  // v5
+	// this->addVertex(Vector3(0, -b, -a).normalized()); // v6
+	// this->addVertex(Vector3(a, 0, -b).normalized());  // v7
+	// this->addVertex(Vector3(a, 0, b).normalized());   // v8
+	// this->addVertex(Vector3(-a, 0, -b).normalized()); // v9
+	// this->addVertex(Vector3(b, -a, 0).normalized());  // v10
+	// this->addVertex(Vector3(-b, -a, 0).normalized()); // v11
 
 	/// Add faces
 	baseFaces.push_back(this->addFace(2, 1, 0));
-	baseFaces.push_back(this->addFace(2, 3, 1));
-	baseFaces.push_back(this->addFace(5, 4, 3));
-	baseFaces.push_back(this->addFace(4, 8, 3));
-	baseFaces.push_back(this->addFace(7, 6, 0));
-	baseFaces.push_back(this->addFace(6, 9, 0));
-	baseFaces.push_back(this->addFace(11, 10, 4));
-	baseFaces.push_back(this->addFace(10, 11, 6));
-	baseFaces.push_back(this->addFace(9, 5, 2));
-	baseFaces.push_back(this->addFace(5, 9, 11));
-	baseFaces.push_back(this->addFace(8, 7, 1));
-	baseFaces.push_back(this->addFace(7, 8, 10));
-	baseFaces.push_back(this->addFace(2, 5, 3));
-	baseFaces.push_back(this->addFace(8, 1, 3));
-	baseFaces.push_back(this->addFace(9, 2, 0));
-	baseFaces.push_back(this->addFace(1, 7, 0));
-	baseFaces.push_back(this->addFace(11, 9, 6));
-	baseFaces.push_back(this->addFace(7, 10, 6));
-	baseFaces.push_back(this->addFace(5, 11, 4));
-	baseFaces.push_back(this->addFace(10, 8, 4));
+	// baseFaces.push_back(this->addFace(2, 3, 1));
+	// baseFaces.push_back(this->addFace(5, 4, 3));
+	// baseFaces.push_back(this->addFace(4, 8, 3));
+	// baseFaces.push_back(this->addFace(7, 6, 0));
+	// baseFaces.push_back(this->addFace(6, 9, 0));
+	// baseFaces.push_back(this->addFace(11, 10, 4));
+	// baseFaces.push_back(this->addFace(10, 11, 6));
+	// baseFaces.push_back(this->addFace(9, 5, 2));
+	// baseFaces.push_back(this->addFace(5, 9, 11));
+	// baseFaces.push_back(this->addFace(8, 7, 1));
+	// baseFaces.push_back(this->addFace(7, 8, 10));
+	// baseFaces.push_back(this->addFace(2, 5, 3));
+	// baseFaces.push_back(this->addFace(8, 1, 3));
+	// baseFaces.push_back(this->addFace(9, 2, 0));
+	// baseFaces.push_back(this->addFace(1, 7, 0));
+	// baseFaces.push_back(this->addFace(11, 9, 6));
+	// baseFaces.push_back(this->addFace(7, 10, 6));
+	// baseFaces.push_back(this->addFace(5, 11, 4));
+	// baseFaces.push_back(this->addFace(10, 8, 4));
 }
 
 void Icosphere::subdivideFace(std::shared_ptr<Face> face, int currentLevel, int targetLevel) {
 	if (currentLevel >= targetLevel) {
 		return; /// Base case: Reached the desired level of subdivision
 	}
-	// std::cout << "subdivideFace(" << face->getVertexIndices()[0] << ", "
-	// 	<< face->getVertexIndices()[1] << ", "
-	// 	<< face->getVertexIndices()[2] << ", " << "): " << currentLevel << " : " << targetLevel << std::endl;
+	std::cout << "subdivideFace(" << face->getVertexIndices()[0] << ", "
+		<< face->getVertexIndices()[1] << ", "
+		<< face->getVertexIndices()[2] << "): " << currentLevel << " : " << targetLevel << std::endl;
 
 	/// Calculate midpoints and create new vertices (if necessary)
 	int mid1 = getOrCreateMidpointIndex(face->getVertexIndices()[0], face->getVertexIndices()[1]);
@@ -220,41 +223,81 @@ void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
 		return;
 
 	std::cout << "setNeighborsForFace\n";
-	std::array<std::shared_ptr<Face>, 4> siblings = parent->getChildren();
+
 	int neighborCount = 0;
+	std::array<int, 3> myIndices = face->getVertexIndices();
+	std::sort(myIndices.begin(), myIndices.end());
 
-	/// Check siblings of the parent (which are my siblings and cousins) to find neighbors
-	for (auto& sibling : siblings) {
-		if (sibling == face || !sibling)
-			continue; /// Skip myself and any null siblings
+	/// check my siblings first
+	for (auto sibling : parent->getChildren()) {
+		if (!sibling)
+			continue; /// Skip if sibling has no child at this index
 
-		std::array<int, 3> myIndices = face->getVertexIndices();
-		std::sort(myIndices.begin(), myIndices.end());
+		std::array<int, 3> siblingIndices = sibling->getVertexIndices();
+		std::sort(siblingIndices.begin(), siblingIndices.end());
 
-		for (int i = 0; i < 4; ++i) { /// Checking all 4 children
-			auto siblingChild = sibling->getChild(i);
-			if (!siblingChild)
-				continue; /// Skip if sibling has no child at this index
+		/// Count matching indices
+		std::array<int, 3> intersection;
+		auto it = std::set_intersection(myIndices.begin(), myIndices.end(),
+										siblingIndices.begin(), siblingIndices.end(),
+										intersection.begin());
+		size_t matches = it - intersection.begin();
+		std::cout << "myIndices:      " << myIndices[0] << ", " << myIndices[1] << ", " << myIndices[2] << "\n";
+		std::cout << "siblingIndices: " << siblingIndices[0] << ", " << siblingIndices[1] << ", " << siblingIndices[2] << "\n";
+		std::cout << "setNeighborsForFace, intersections: " << matches << "\n";
 
-			std::array<int, 3> siblingIndices = siblingChild->getVertexIndices();
-			std::sort(siblingIndices.begin(), siblingIndices.end());
+		/// If exactly two indices match, it's a neighbor
+		if (matches == 2) {
+			std::cout << "setNeighbor(" << sibling->getVertexIndices()[0] << ", "
+				<< sibling->getVertexIndices()[1] << ", "
+				<< sibling->getVertexIndices()[2] << ")\n";
+			// face->setNeighbor(neighborCount++, sibling);
+			neighborCount++;
+			face->addNeighbor(sibling);
+		}
+	}
 
-			/// Count matching indices
-			std::array<int, 3> intersection;
-			auto it = std::set_intersection(myIndices.begin(), myIndices.end(),
-											siblingIndices.begin(), siblingIndices.end(),
-											intersection.begin());
-			size_t matches = it - intersection.begin();
-			std::cout << "myIndices:      " << myIndices[0] << ", " << myIndices[1] << ", " << myIndices[2] << "\n";
-			std::cout << "siblingIndices: " << siblingIndices[0] << ", " << siblingIndices[1] << ", " << siblingIndices[2] << "\n";
-			std::cout << "setNeighborsForFace, intersections: " << matches << "\n";
+	/// Now check my cusins 
+	auto grandparent = parent->getParent();
+	if (grandparent) {
 
-			/// If exactly two indices match, it's a neighbor
-			if (matches == 2) {
-				std::cout << "setNeighbor(" << siblingChild->getVertexIndices()[0] << ", "
-					<< siblingChild->getVertexIndices()[1] << ", "
-					<< siblingChild->getVertexIndices()[2] << ", " << ")\n";
-				face->setNeighbor(neighborCount++, siblingChild);
+		std::array<std::shared_ptr<Face>, 4> siblings = grandparent->getChildren();
+
+		/// Check siblings of the parent (which are my siblings and cousins) to find neighbors
+		for (auto& sibling : siblings) {
+			if (sibling == parent || !sibling)
+				continue; /// Skip my parent (did that already) and any null siblings
+
+			// std::array<int, 3> myIndices = face->getVertexIndices();
+			// std::sort(myIndices.begin(), myIndices.end());
+
+			for (int i = 0; i < 4; ++i) { /// Checking all 4 children
+				auto siblingChild = sibling->getChild(i);
+				if (!siblingChild)
+					continue; /// Skip if sibling has no child at this index
+
+				std::array<int, 3> siblingIndices = siblingChild->getVertexIndices();
+				std::sort(siblingIndices.begin(), siblingIndices.end());
+
+				/// Count matching indices
+				std::array<int, 3> intersection;
+				auto it = std::set_intersection(myIndices.begin(), myIndices.end(),
+												siblingIndices.begin(), siblingIndices.end(),
+												intersection.begin());
+				size_t matches = it - intersection.begin();
+				std::cout << "myIndices:      " << myIndices[0] << ", " << myIndices[1] << ", " << myIndices[2] << "\n";
+				std::cout << "siblingIndices: " << siblingIndices[0] << ", " << siblingIndices[1] << ", " << siblingIndices[2] << "\n";
+				std::cout << "setNeighborsForFace, intersections: " << matches << "\n";
+
+				/// If exactly two indices match, it's a neighbor
+				if (matches == 2) {
+					std::cout << "setNeighbor(" << siblingChild->getVertexIndices()[0] << ", "
+						<< siblingChild->getVertexIndices()[1] << ", "
+						<< siblingChild->getVertexIndices()[2] << ")\n";
+					// face->setNeighbor(neighborCount++, siblingChild);
+					neighborCount++;
+					face->addNeighbor(siblingChild);
+				}
 			}
 		}
 	}

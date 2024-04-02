@@ -1,4 +1,6 @@
 #include "face.h"
+
+#include <cstddef>
 #include <iostream>
 
 
@@ -13,13 +15,29 @@ void Face::setData(float value) {
 }
 
 void Face::setNeighbor(int index, std::shared_ptr<Face> neighbor) {
-	if (index >= 0 && index < 3) {
+	if (index >= 0 && index < this->neighbors.size()) {
 		this->neighbors[index] = std::move(neighbor);
 	}
 }
 
+void Face::addNeighbor(std::shared_ptr<Face> neighbor) {
+	for (size_t index = 0; index < this->neighbors.size(); ++index) {
+		if (neighbor == this->neighbors[index]) {
+			std::cout << "addNeighbor: neighbor already exists\n";
+			return;
+		}
+	}
+
+	for (size_t index = 0; index < this->neighbors.size(); ++index) {
+		if (this->neighbors[index] == nullptr) {
+			this->setNeighbor(index, neighbor);
+			return;
+		}
+	}
+}
+
 void Face::setChild(int index, std::shared_ptr<Face> child) {
-	if (index >= 0 && index < 4) {
+	if (index >= 0 && index < this->children.size()) {
 		this->children[index] = std::move(child);
 	}
 }
@@ -48,14 +66,14 @@ float Face::getData() const {
 }
 
 std::shared_ptr<Face> Face::getNeighbor(int index) const {
-	if (index >= 0 && index < 3) {
+	if (index >= 0 && index < this->neighbors.size()) {
 		return this->neighbors[index];
 	}
 	return nullptr;
 }
 
 std::shared_ptr<Face> Face::getChild(int index) const {
-	if (index >= 0 && index < 3) {
+	if (index >= 0 && index < this->children.size()) {
 		return this->children[index];
 	}
 	return nullptr;
