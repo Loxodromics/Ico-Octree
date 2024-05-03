@@ -17,6 +17,10 @@ public:
 	std::vector<Vector3> getVertices() const;
 	std::vector<int> getIndices() const;
 
+	/// Visitor
+	void applyVisitorToFace(std::shared_ptr<Face> face, FaceVisitor& visitor);
+	void applyVisitor(FaceVisitor& visitor);
+
 private:
 	/// Copy constructor
 	Icosphere(const Icosphere& other);

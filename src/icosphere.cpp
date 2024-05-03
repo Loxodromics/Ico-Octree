@@ -1,5 +1,6 @@
 #include "icosphere.h"
 #include "vector3.h"
+#include "spdlog/spdlog.h"
 
 #include <algorithm> /// For std::min and std::max
 #include <map>
@@ -35,8 +36,27 @@ std::vector<int> Icosphere::getIndices() const {
 	return indices;
 }
 
+void Icosphere::applyVisitorToFace(std::shared_ptr<Face> face, FaceVisitor& visitor) {
+	if (!face) return;
+	
+	visitor.visit(face); // Apply the visitor to the current face
+
+	// Recursively apply the visitor to all children
+	for (auto& child : face->getChildren()) {
+		applyVisitorToFace(child, visitor);
+	}
+}
+
+void applyVisitor(FaceVisitor& visitor) {
+	for (auto& baseFace : baseFaces) {
+		applyVisitorToFace(baseFace, visitor);
+	}
+}
+	
+
 int Icosphere::addVertex(const Vector3 vertex) {
 	vertices.push_back(vertex);
+	// spdlog::debug("addVertex: {}", vertices.size() - 1);
 	/// Assuming the vertices vector is zero-indexed, the position of the newly added vertex
 	/// is at the size of the vector before the push_back minus 1.
 	return vertices.size() - 1;
@@ -59,8 +79,8 @@ void Icosphere::subdivide(int levels) {
 		subdivideFace(baseFace, 0, levels);
 	}
 
-	// After subdivision, we run a separate function
-	// to recursively set neighbors for each face.
+	/// After subdivision, we run a separate function
+	/// to recursively set neighbors for each face.
 	this->setNeighbors();
 }
 
@@ -100,37 +120,37 @@ void Icosphere::initializeBaseIcosahedron() {
 	this->addVertex(Vector3(0, b, -a).normalized());  // v0
 	this->addVertex(Vector3(b, a, 0).normalized());   // v1
 	this->addVertex(Vector3(-b, a, 0).normalized());  // v2
-	// this->addVertex(Vector3(0, b, a).normalized());   // v3
-	// this->addVertex(Vector3(0, -b, a).normalized());  // v4
-	// this->addVertex(Vector3(-a, 0, b).normalized());  // v5
-	// this->addVertex(Vector3(0, -b, -a).normalized()); // v6
-	// this->addVertex(Vector3(a, 0, -b).normalized());  // v7
-	// this->addVertex(Vector3(a, 0, b).normalized());   // v8
-	// this->addVertex(Vector3(-a, 0, -b).normalized()); // v9
-	// this->addVertex(Vector3(b, -a, 0).normalized());  // v10
-	// this->addVertex(Vector3(-b, -a, 0).normalized()); // v11
+	this->addVertex(Vector3(0, b, a).normalized());   // v3
+	this->addVertex(Vector3(0, -b, a).normalized());  // v4
+	this->addVertex(Vector3(-a, 0, b).normalized());  // v5
+	this->addVertex(Vector3(0, -b, -a).normalized()); // v6
+	this->addVertex(Vector3(a, 0, -b).normalized());  // v7
+	this->addVertex(Vector3(a, 0, b).normalized());   // v8
+	this->addVertex(Vector3(-a, 0, -b).normalized()); // v9
+	this->addVertex(Vector3(b, -a, 0).normalized());  // v10
+	this->addVertex(Vector3(-b, -a, 0).normalized()); // v11
 
 	/// Add faces
 	baseFaces.push_back(this->addFace(2, 1, 0));
-	// baseFaces.push_back(this->addFace(2, 3, 1));
-	// baseFaces.push_back(this->addFace(5, 4, 3));
-	// baseFaces.push_back(this->addFace(4, 8, 3));
-	// baseFaces.push_back(this->addFace(7, 6, 0));
-	// baseFaces.push_back(this->addFace(6, 9, 0));
-	// baseFaces.push_back(this->addFace(11, 10, 4));
-	// baseFaces.push_back(this->addFace(10, 11, 6));
-	// baseFaces.push_back(this->addFace(9, 5, 2));
-	// baseFaces.push_back(this->addFace(5, 9, 11));
-	// baseFaces.push_back(this->addFace(8, 7, 1));
-	// baseFaces.push_back(this->addFace(7, 8, 10));
-	// baseFaces.push_back(this->addFace(2, 5, 3));
-	// baseFaces.push_back(this->addFace(8, 1, 3));
-	// baseFaces.push_back(this->addFace(9, 2, 0));
-	// baseFaces.push_back(this->addFace(1, 7, 0));
-	// baseFaces.push_back(this->addFace(11, 9, 6));
-	// baseFaces.push_back(this->addFace(7, 10, 6));
-	// baseFaces.push_back(this->addFace(5, 11, 4));
-	// baseFaces.push_back(this->addFace(10, 8, 4));
+	baseFaces.push_back(this->addFace(2, 3, 1));
+	baseFaces.push_back(this->addFace(5, 4, 3));
+	baseFaces.push_back(this->addFace(4, 8, 3));
+	baseFaces.push_back(this->addFace(7, 6, 0));
+	baseFaces.push_back(this->addFace(6, 9, 0));
+	baseFaces.push_back(this->addFace(11, 10, 4));
+	baseFaces.push_back(this->addFace(10, 11, 6));
+	baseFaces.push_back(this->addFace(9, 5, 2));
+	baseFaces.push_back(this->addFace(5, 9, 11));
+	baseFaces.push_back(this->addFace(8, 7, 1));
+	baseFaces.push_back(this->addFace(7, 8, 10));
+	baseFaces.push_back(this->addFace(2, 5, 3));
+	baseFaces.push_back(this->addFace(8, 1, 3));
+	baseFaces.push_back(this->addFace(9, 2, 0));
+	baseFaces.push_back(this->addFace(1, 7, 0));
+	baseFaces.push_back(this->addFace(11, 9, 6));
+	baseFaces.push_back(this->addFace(7, 10, 6));
+	baseFaces.push_back(this->addFace(5, 11, 4));
+	baseFaces.push_back(this->addFace(10, 8, 4));
 }
 
 void Icosphere::subdivideFace(std::shared_ptr<Face> face, int currentLevel, int targetLevel) {
@@ -147,12 +167,6 @@ void Icosphere::subdivideFace(std::shared_ptr<Face> face, int currentLevel, int 
 	int mid3 = getOrCreateMidpointIndex(face->getVertexIndices()[2], face->getVertexIndices()[0]);
 
 	/// Create new faces using the original vertices and the new midpoints
-	// std::array<std::shared_ptr<Face>, 4> newFaces = {
-	// 	std::make_shared<Face>(std::array<int, 3>{face->getVertexIndices()[0], mid1, mid3}),
-	// 	std::make_shared<Face>(std::array<int, 3>{mid1, face->getVertexIndices()[1], mid2}),
-	// 	std::make_shared<Face>(std::array<int, 3>{mid3, mid2, face->getVertexIndices()[2]}),
-	// 	std::make_shared<Face>(std::array<int, 3>{mid1, mid2, mid3})
-	// };
 	std::array<std::shared_ptr<Face>, 4> newFaces = {
 		this->addFace(face->getVertexIndices()[0], mid1, mid3),
 		this->addFace(mid1, face->getVertexIndices()[1], mid2),
@@ -251,7 +265,6 @@ void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
 			std::cout << "setNeighbor(" << sibling->getVertexIndices()[0] << ", "
 				<< sibling->getVertexIndices()[1] << ", "
 				<< sibling->getVertexIndices()[2] << ")\n";
-			// face->setNeighbor(neighborCount++, sibling);
 			neighborCount++;
 			face->addNeighbor(sibling);
 		}
@@ -267,9 +280,6 @@ void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
 		for (auto& sibling : siblings) {
 			if (sibling == parent || !sibling)
 				continue; /// Skip my parent (did that already) and any null siblings
-
-			// std::array<int, 3> myIndices = face->getVertexIndices();
-			// std::sort(myIndices.begin(), myIndices.end());
 
 			for (int i = 0; i < 4; ++i) { /// Checking all 4 children
 				auto siblingChild = sibling->getChild(i);
@@ -294,7 +304,6 @@ void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
 					std::cout << "setNeighbor(" << siblingChild->getVertexIndices()[0] << ", "
 						<< siblingChild->getVertexIndices()[1] << ", "
 						<< siblingChild->getVertexIndices()[2] << ")\n";
-					// face->setNeighbor(neighborCount++, siblingChild);
 					neighborCount++;
 					face->addNeighbor(siblingChild);
 				}

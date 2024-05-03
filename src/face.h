@@ -49,3 +49,9 @@ private:
 	float data{0.0f};
 	std::array<int, 3> vertexIndices{{-1, -1, -1}};
 };
+
+class FaceVisitor {
+public:
+	virtual ~FaceVisitor() = default;
+	virtual void visit(std::shared_ptr<Face> face) = 0;
+};
