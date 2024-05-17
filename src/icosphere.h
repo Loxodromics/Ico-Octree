@@ -14,12 +14,12 @@ public:
 	void subdivide(int levels); // Adds a method to subdivide the icosphere
 
 	/// Accessors
-	std::vector<Vector3> getVertices() const;
-	std::vector<int> getIndices() const;
+	[[nodiscard]] std::vector<Vector3> getVertices() const;
+	[[nodiscard]] std::vector<unsigned int> getIndices() const;
 
 	/// Visitor
-	void applyVisitorToFace(std::shared_ptr<Face> face, FaceVisitor& visitor);
-	void applyVisitor(FaceVisitor& visitor);
+	static void applyVisitorToFace(const std::shared_ptr<Face> &face, FaceVisitor& visitor);
+	void applyVisitor(FaceVisitor& visitor) const;
 
 private:
 	/// Copy constructor
@@ -30,19 +30,19 @@ private:
 	void initializeBaseIcosahedron();
 
 	/// Helper methods
-	int addVertex(const Vector3 vertex);
-	std::shared_ptr<Face> addFace(int v1, int v2, int v3);
+	unsigned int addVertex(Vector3 vertex);
+	std::shared_ptr<Face> addFace(unsigned int v1, unsigned int v2, unsigned int v3);
 
-	int getOrCreateMidpointIndex(int index1, int index2); /// Helper to handle midpoint vertices
-	void subdivideFace(std::shared_ptr<Face> face, int currentLevel, int targetLevel);
+	unsigned int getOrCreateMidpointIndex(unsigned int index1, unsigned int index2); /// Helper to handle midpoint vertices
+	void subdivideFace(const std::shared_ptr<Face> &face, unsigned int currentLevel, unsigned int targetLevel);
 
 	void setNeighbors();
-	void setNeighborsForBaseFaces();
-	void setNeighborsForFace(std::shared_ptr<Face> face);
+	void setNeighborsForBaseFaces() const;
+	void setNeighborsForFace(const std::shared_ptr<Face>& face);
 
 	/// Data
 	std::vector<Vector3> vertices;
-	std::vector<int> indices;
-	std::map<std::pair<int, int>, int> midpointIndexCache; /// Cache to store midpoints
+	std::vector<unsigned int> indices;
+	std::map<std::pair<unsigned int, unsigned int>, unsigned int> midpointIndexCache; /// Cache to store midpoints
 	std::vector<std::shared_ptr<Face>> baseFaces;
 };

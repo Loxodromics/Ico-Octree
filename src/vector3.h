@@ -5,33 +5,33 @@ class Vector3 {
 public:
 	float x, y, z;
 
-	// Constructors
+	/// Constructors
 	Vector3();
 	Vector3(float x, float y, float z);
 
-	// Destructor
+	/// Destructor
 	~Vector3() = default;
 
-	// Copy constructor
+	/// Copy constructor
 	Vector3(const Vector3& other) = default;
 
-	// Assignment operator
+	/// Assignment operator
 	Vector3& operator=(const Vector3& other) = default;
 
-	// Vector operations
+	/// Vector operations
 	Vector3 operator+(const Vector3& other) const;
 	Vector3 operator-(const Vector3& other) const;
 	Vector3 operator*(float scalar) const;
 
-	// Dot product
-	float dot(const Vector3& other) const;
+	/// Dot product
+	[[nodiscard]] float dot(const Vector3& other) const;
 
-	// Cross product
-	Vector3 cross(const Vector3& other) const;
+	/// Cross product
+	[[nodiscard]] Vector3 cross(const Vector3& other) const;
 
-	// Normalize the vector
+	/// Normalize the vector
 	void normalize();
-	Vector3 normalized() const;
+	[[nodiscard]] Vector3 normalized() const;
 };
 
-#endif // VECTOR3_H
+#endif /// VECTOR3_H

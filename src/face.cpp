@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-Face::Face(const std::array<int, 3>& vertexIndices)
+Face::Face(const std::array<unsigned int, 3>& vertexIndices)
 : vertexIndices(vertexIndices) {
 
 }
@@ -24,7 +24,7 @@ void Face::setData(float value) {
 	this->data = value;
 }
 
-void Face::setNeighbor(int index, std::shared_ptr<Face> neighbor) {
+void Face::setNeighbor(unsigned int index, std::shared_ptr<Face> neighbor) {
 	if (index >= 0 && index < this->neighbors.size()) {
 		this->neighbors[index] = std::move(neighbor);
 	}
@@ -46,7 +46,7 @@ void Face::addNeighbor(std::shared_ptr<Face> neighbor) {
 	}
 }
 
-void Face::setChild(int index, std::shared_ptr<Face> child) {
+void Face::setChild(unsigned int index, std::shared_ptr<Face> child) {
 	if (index >= 0 && index < this->children.size()) {
 		this->children[index] = std::move(child);
 	}
@@ -66,7 +66,7 @@ void Face::setParent(std::weak_ptr<Face> parent) {
 	this->parent = std::move(parent);
 }
 
-void Face::setVertexIndices(const std::array<int, 3>& indices) {
+void Face::setVertexIndices(const std::array<unsigned int, 3>& indices) {
 	this->vertexIndices = indices;
 }
 
@@ -75,15 +75,15 @@ float Face::getData() const {
 	return this->data;
 }
 
-std::shared_ptr<Face> Face::getNeighbor(int index) const {
+std::shared_ptr<Face> Face::getNeighbor(unsigned int index) const {
 	if (index >= 0 && index < this->neighbors.size()) {
 		return this->neighbors[index];
 	}
 	return nullptr;
 }
 
-std::shared_ptr<Face> Face::getChild(int index) const {
-	if (index >= 0 && index < this->children.size()) {
+std::shared_ptr<Face> Face::getChild(unsigned int index) const {
+	if (index < this->children.size()) {
 		return this->children[index];
 	}
 	return nullptr;
@@ -100,6 +100,6 @@ std::shared_ptr<Face> Face::getParent() const {
 		return nullptr;
 }
 
-std::array<int, 3> Face::getVertexIndices() const {
+std::array<unsigned int, 3> Face::getVertexIndices() const {
 	return this->vertexIndices;
 }

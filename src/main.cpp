@@ -1,7 +1,6 @@
 
 #include "icosphere.h"
 #include "datasettingvisitor.h"
-#include <iostream>
 
 int main() {
 

@@ -1,40 +1,40 @@
 #include "vector3.h"
-#include <cmath> // For sqrt
+#include <cmath> /// For sqrt
 
-// Default constructor initializes to zero vector
+/// Default constructor initializes to zero vector
 Vector3::Vector3() : x(0.0f), y(0.0f), z(0.0f) {}
 
-// Constructor with parameters
+/// Constructor with parameters
 Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-// Addition
+/// Addition
 Vector3 Vector3::operator+(const Vector3& other) const {
-	return Vector3(x + other.x, y + other.y, z + other.z);
+	return {x + other.x, y + other.y, z + other.z};
 }
 
-// Subtraction
+/// Subtraction
 Vector3 Vector3::operator-(const Vector3& other) const {
-	return Vector3(x - other.x, y - other.y, z - other.z);
+	return {x - other.x, y - other.y, z - other.z};
 }
 
-// Scalar multiplication
+/// Scalar multiplication
 Vector3 Vector3::operator*(float scalar) const {
-	return Vector3(x * scalar, y * scalar, z * scalar);
+	return {x * scalar, y * scalar, z * scalar};
 }
 
-// Dot product
+/// Dot product
 float Vector3::dot(const Vector3& other) const {
 	return x * other.x + y * other.y + z * other.z;
 }
 
-// Cross product
+/// Cross product
 Vector3 Vector3::cross(const Vector3& other) const {
-	return Vector3(y * other.z - z * other.y,
+	return {y * other.z - z * other.y,
 				z * other.x - x * other.z,
-				x * other.y - y * other.x);
+				x * other.y - y * other.x};
 }
 
-// Normalize the vector
+/// Normalize the vector
 void Vector3::normalize() {
 	float length = sqrt(x * x + y * y + z * z);
 	if (length > 0) {
@@ -47,8 +47,8 @@ void Vector3::normalize() {
 Vector3 Vector3::normalized() const {
 	float length = sqrt(x * x + y * y + z * z);
 	if (length > 0) {
-		return Vector3(x / length, y / length, z / length);
+		return {x / length, y / length, z / length};
 	} else {
-		return Vector3(x, y, z); // Return the original vector if length is 0 to avoid division by zero
+		return {x, y, z}; /// Return the original vector if length is 0 to avoid division by zero
 	}
 }

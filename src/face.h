@@ -8,7 +8,7 @@
 class Face {
 public:
 	/// Constructor with vertex indices
-	explicit Face(const std::array<int, 3>& vertexIndices);
+	explicit Face(const std::array<unsigned int, 3>& vertexIndices);
 
 	/// Default destructor - smart pointers handle their own memory
 	~Face() = default;
@@ -29,17 +29,17 @@ public:
 	void setData(float value);
 	float getData() const;
 
-	void setNeighbor(int Index, std::shared_ptr<Face> neighbor);
+	void setNeighbor(unsigned int index, std::shared_ptr<Face> neighbor);
 	void addNeighbor(std::shared_ptr<Face> neighbor);
-	std::shared_ptr<Face> getNeighbor(int index) const;
-	void setChild(int Index, std::shared_ptr<Face> child);
+	std::shared_ptr<Face> getNeighbor(unsigned int index) const;
+	void setChild(unsigned int index, std::shared_ptr<Face> child);
 	void addChild(std::shared_ptr<Face> child);
-	std::shared_ptr<Face> getChild(int index) const;
+	std::shared_ptr<Face> getChild(unsigned int index) const;
 	std::array<std::shared_ptr<Face>, 4> getChildren() const;
 	void setParent(std::weak_ptr<Face> parent);
 	std::shared_ptr<Face> getParent() const; /// Gets the parent, converting the weak pointer to a shared pointer
-	void setVertexIndices(const std::array<int, 3>& indices);
-	std::array<int, 3> getVertexIndices() const;
+	void setVertexIndices(const std::array<unsigned int, 3>& indices);
+	std::array<unsigned int, 3> getVertexIndices() const;
 
 private:
 	/// Default constructor
@@ -50,7 +50,7 @@ private:
 	std::array<std::shared_ptr<Face>, 3> neighbors;
 	std::weak_ptr<Face> parent; /// weak_ptr for a non-owning, nullable reference to the parent
 	float data{0.0f};
-	std::array<int, 3> vertexIndices{{-1, -1, -1}};
+	std::array<unsigned int, 3> vertexIndices{{0, 0, 0}};
 };
 
 class FaceVisitor {

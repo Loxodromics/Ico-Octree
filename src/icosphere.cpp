@@ -32,11 +32,11 @@ std::vector<Vector3> Icosphere::getVertices() const {
 	return vertices;
 }
 
-std::vector<int> Icosphere::getIndices() const {
+std::vector<unsigned int> Icosphere::getIndices() const {
 	return indices;
 }
 
-void Icosphere::applyVisitorToFace(std::shared_ptr<Face> face, FaceVisitor& visitor) {
+void Icosphere::applyVisitorToFace(const std::shared_ptr<Face> &face, FaceVisitor& visitor) {
 	if (!face) return;
 	
 	visitor.visit(face); // Apply the visitor to the current face
@@ -47,14 +47,14 @@ void Icosphere::applyVisitorToFace(std::shared_ptr<Face> face, FaceVisitor& visi
 	}
 }
 
-void Icosphere::applyVisitor(FaceVisitor& visitor) {
+void Icosphere::applyVisitor(FaceVisitor& visitor) const {
 	for (auto& baseFace : this->baseFaces) {
 		applyVisitorToFace(baseFace, visitor);
 	}
 }
 	
 
-int Icosphere::addVertex(const Vector3 vertex) {
+unsigned int Icosphere::addVertex(const Vector3 vertex) {
 	vertices.push_back(vertex);
 	// spdlog::debug("addVertex: {}", vertices.size() - 1);
 	/// Assuming the vertices vector is zero-indexed, the position of the newly added vertex
@@ -62,7 +62,7 @@ int Icosphere::addVertex(const Vector3 vertex) {
 	return vertices.size() - 1;
 }
 
-std::shared_ptr<Face> Icosphere::addFace(int v1, int v2, int v3) {
+std::shared_ptr<Face> Icosphere::addFace(const unsigned int v1, const unsigned int v2, const unsigned int v3) {
 	std::cout << "addFace(" << v1 << ", " << v2 << ", " << v3 <<")\n";
 	/// Adding indices for a triangular face
 	indices.push_back(v3);
@@ -70,7 +70,7 @@ std::shared_ptr<Face> Icosphere::addFace(int v1, int v2, int v3) {
 	indices.push_back(v1);
 
 	/// Create and store the Face object
-	std::shared_ptr<Face> face = std::make_shared<Face>(std::array<int, 3>{v3, v2, v1});
+	std::shared_ptr<Face> face = std::make_shared<Face>(std::array<unsigned int, 3>{v3, v2, v1});
 	return face;
 }
 
@@ -84,7 +84,7 @@ void Icosphere::subdivide(int levels) {
 	this->setNeighbors();
 }
 
-int Icosphere::getOrCreateMidpointIndex(int index1, int index2) {
+unsigned int Icosphere::getOrCreateMidpointIndex(unsigned int index1, unsigned int index2) {
 	/// Ensure the first index is always the smaller one to avoid duplicates
 	std::pair<int, int> key(std::min(index1, index2), std::max(index1, index2));
 	std::cout << "getOrCreateMidpointIndex(" << key.first << ", " << key.second << "): ";
@@ -98,7 +98,7 @@ int Icosphere::getOrCreateMidpointIndex(int index1, int index2) {
 	/// Create a new midpoint vertex, then normalize it to ensure it's on the unit sphere
 	Vector3 midpoint = (vertices[index1] + vertices[index2]) * 0.5f;
 	midpoint.normalize();
-	int midpointIndex = addVertex(midpoint);
+	unsigned int midpointIndex = addVertex(midpoint);
 	std::cout << "add vertex: " << midpointIndex << std::endl;
 
 	/// Add to cache
@@ -153,7 +153,7 @@ void Icosphere::initializeBaseIcosahedron() {
 	baseFaces.push_back(this->addFace(10, 8, 4));
 }
 
-void Icosphere::subdivideFace(std::shared_ptr<Face> face, int currentLevel, int targetLevel) {
+void Icosphere::subdivideFace(const std::shared_ptr<Face> &face, unsigned int currentLevel, unsigned int targetLevel) {
 	if (currentLevel >= targetLevel) {
 		return; /// Base case: Reached the desired level of subdivision
 	}
@@ -162,9 +162,9 @@ void Icosphere::subdivideFace(std::shared_ptr<Face> face, int currentLevel, int 
 		<< face->getVertexIndices()[2] << "): " << currentLevel << " : " << targetLevel << std::endl;
 
 	/// Calculate midpoints and create new vertices (if necessary)
-	int mid1 = getOrCreateMidpointIndex(face->getVertexIndices()[0], face->getVertexIndices()[1]);
-	int mid2 = getOrCreateMidpointIndex(face->getVertexIndices()[1], face->getVertexIndices()[2]);
-	int mid3 = getOrCreateMidpointIndex(face->getVertexIndices()[2], face->getVertexIndices()[0]);
+	unsigned int mid1 = getOrCreateMidpointIndex(face->getVertexIndices()[0], face->getVertexIndices()[1]);
+	unsigned int mid2 = getOrCreateMidpointIndex(face->getVertexIndices()[1], face->getVertexIndices()[2]);
+	unsigned int mid3 = getOrCreateMidpointIndex(face->getVertexIndices()[2], face->getVertexIndices()[0]);
 
 	/// Create new faces using the original vertices and the new midpoints
 	std::array<std::shared_ptr<Face>, 4> newFaces = {
@@ -189,8 +189,8 @@ void Icosphere::subdivideFace(std::shared_ptr<Face> face, int currentLevel, int 
 void Icosphere::setNeighbors() {
 	this->setNeighborsForBaseFaces();
 
-	for (auto baseFace : this->baseFaces) {
-		for (auto face : baseFace->getChildren()) {
+	for (const auto& baseFace : this->baseFaces) {
+		for (const auto& face : baseFace->getChildren()) {
 			if (face)
 				this->setNeighborsForFace(face);
 			else
@@ -199,9 +199,9 @@ void Icosphere::setNeighbors() {
 	}
 }
 
-void Icosphere::setNeighborsForBaseFaces() {
+void Icosphere::setNeighborsForBaseFaces() const {
 	for (auto& currentFace : this->baseFaces) {
-		std::array<int, 3> currentIndices = currentFace->getVertexIndices();
+		std::array<unsigned int, 3> currentIndices = currentFace->getVertexIndices();
 		std::sort(currentIndices.begin(), currentIndices.end());
 
 		int neighborCount = 0;
@@ -209,14 +209,14 @@ void Icosphere::setNeighborsForBaseFaces() {
 		for (auto& potentialNeighbor : this->baseFaces) {
 			if (currentFace == potentialNeighbor) continue; /// Skip the same face
 
-			std::array<int, 3> neighborIndices = potentialNeighbor->getVertexIndices();
+			std::array<unsigned int, 3> neighborIndices = potentialNeighbor->getVertexIndices();
 			std::sort(neighborIndices.begin(), neighborIndices.end());
 
-			std::array<int, 3> intersection;
-			auto it = std::set_intersection(currentIndices.begin(), currentIndices.end(),
-											neighborIndices.begin(), neighborIndices.end(),
-											intersection.begin());
-			size_t matches = it - intersection.begin();
+			std::array<unsigned int, 3> intersection{};
+			const auto it = std::set_intersection(currentIndices.begin(), currentIndices.end(),
+			                                      neighborIndices.begin(), neighborIndices.end(),
+			                                      intersection.begin());
+			const size_t matches = it - intersection.begin();
 
 			if (matches == 2) { /// If exactly two indices match, it's a neighbor
 				std::cout << "setNeighbor(" << potentialNeighbor->getVertexIndices()[0] << ", "
@@ -231,7 +231,7 @@ void Icosphere::setNeighborsForBaseFaces() {
 }
 
 
-void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
+void Icosphere::setNeighborsForFace(const std::shared_ptr<Face>& face) {
 	auto parent = face->getParent();
 	if (!parent)
 		return;
@@ -239,23 +239,23 @@ void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
 	std::cout << "setNeighborsForFace\n";
 
 	int neighborCount = 0;
-	std::array<int, 3> myIndices = face->getVertexIndices();
+	std::array<unsigned int, 3> myIndices = face->getVertexIndices();
 	std::sort(myIndices.begin(), myIndices.end());
 
 	/// check my siblings first
-	for (auto sibling : parent->getChildren()) {
+	for (const auto& sibling : parent->getChildren()) {
 		if (!sibling)
 			continue; /// Skip if sibling has no child at this index
 
-		std::array<int, 3> siblingIndices = sibling->getVertexIndices();
+		std::array<unsigned int, 3> siblingIndices = sibling->getVertexIndices();
 		std::sort(siblingIndices.begin(), siblingIndices.end());
 
 		/// Count matching indices
-		std::array<int, 3> intersection;
-		auto it = std::set_intersection(myIndices.begin(), myIndices.end(),
-										siblingIndices.begin(), siblingIndices.end(),
-										intersection.begin());
-		size_t matches = it - intersection.begin();
+		std::array<unsigned int, 3> intersection{};
+		const auto it = std::set_intersection(myIndices.begin(), myIndices.end(),
+		                                      siblingIndices.begin(), siblingIndices.end(),
+		                                      intersection.begin());
+		const size_t matches = it - intersection.begin();
 		std::cout << "myIndices:      " << myIndices[0] << ", " << myIndices[1] << ", " << myIndices[2] << "\n";
 		std::cout << "siblingIndices: " << siblingIndices[0] << ", " << siblingIndices[1] << ", " << siblingIndices[2] << "\n";
 		std::cout << "setNeighborsForFace, intersections: " << matches << "\n";
@@ -271,7 +271,7 @@ void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
 	}
 
 	/// Now check my cusins 
-	auto grandparent = parent->getParent();
+	const auto grandparent = parent->getParent();
 	if (grandparent) {
 
 		std::array<std::shared_ptr<Face>, 4> siblings = grandparent->getChildren();
@@ -286,12 +286,12 @@ void Icosphere::setNeighborsForFace(std::shared_ptr<Face> face) {
 				if (!siblingChild)
 					continue; /// Skip if sibling has no child at this index
 
-				std::array<int, 3> siblingIndices = siblingChild->getVertexIndices();
+				std::array<unsigned int, 3> siblingIndices = siblingChild->getVertexIndices();
 				std::sort(siblingIndices.begin(), siblingIndices.end());
 
 				/// Count matching indices
-				std::array<int, 3> intersection;
-				auto it = std::set_intersection(myIndices.begin(), myIndices.end(),
+				std::array<unsigned int, 3> intersection{};
+				const auto it = std::set_intersection(myIndices.begin(), myIndices.end(),
 												siblingIndices.begin(), siblingIndices.end(),
 												intersection.begin());
 				size_t matches = it - intersection.begin();
