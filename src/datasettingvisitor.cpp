@@ -1,0 +1,21 @@
+//
+// Created by Philipp Engelhard on 17.05.24.
+//
+
+#include "datasettingvisitor.h"
+
+void DataSettingVisitor::visit(std::shared_ptr<Face> face) {
+    if (!face) return;
+
+    /// Example operation: Set face data based on some criteria
+    /// This is where you implement the logic to set the data for the face
+    float data = calculateDataForFace(face);
+    face->setData(data);
+    std::cout << "calculateDataForFace Face object: " << *face << std::endl;
+}
+
+float DataSettingVisitor::calculateDataForFace(std::shared_ptr<Face> face) {
+    /// Implement your logic to calculate data for a face
+    /// This is just a placeholder implementation
+    return (float)rand()/(float)(RAND_MAX/1.0f); /// Placeholder return value
+}

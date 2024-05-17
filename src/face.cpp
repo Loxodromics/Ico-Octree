@@ -9,6 +9,16 @@ Face::Face(const std::array<int, 3>& vertexIndices)
 
 }
 
+std::ostream& operator<<(std::ostream& os, const Face& face) {
+	os << "Face(Vertices: [";
+	for (size_t i = 0; i < face.vertexIndices.size(); ++i) {
+		os << face.vertexIndices[i];
+		if (i < face.vertexIndices.size() - 1) os << ", ";
+	}
+	os << "], Data: " << face.data << ")";
+	return os;
+}
+
 /// Setters
 void Face::setData(float value) {
 	this->data = value;

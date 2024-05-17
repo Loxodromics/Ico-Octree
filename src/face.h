@@ -3,6 +3,7 @@
 #include "vector3.h"
 #include <array>
 #include <memory> /// Include for smart pointers
+#include <iostream>
 
 class Face {
 public:
@@ -22,6 +23,8 @@ public:
 	bool operator==(const Face& other) const {
 		return vertexIndices == other.vertexIndices;
 	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Face& face);
 
 	void setData(float value);
 	float getData() const;

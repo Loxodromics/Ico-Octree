@@ -1,10 +1,10 @@
 #include "icosphere.h"
 #include "vector3.h"
-#include "spdlog/spdlog.h"
+#include "datasettingvisitor.h"
+// #include "spdlog/spdlog.h"
 
 #include <algorithm> /// For std::min and std::max
 #include <map>
-#include <utility> /// For std::pair
 #include <iostream>
 
 Icosphere::Icosphere() {
@@ -47,8 +47,8 @@ void Icosphere::applyVisitorToFace(std::shared_ptr<Face> face, FaceVisitor& visi
 	}
 }
 
-void applyVisitor(FaceVisitor& visitor) {
-	for (auto& baseFace : baseFaces) {
+void Icosphere::applyVisitor(FaceVisitor& visitor) {
+	for (auto& baseFace : this->baseFaces) {
 		applyVisitorToFace(baseFace, visitor);
 	}
 }
