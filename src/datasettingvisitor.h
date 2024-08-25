@@ -7,5 +7,5 @@ public:
 	void visit(std::shared_ptr<Face> face) override;
 	
 private:
-	float calculateDataForFace(std::shared_ptr<Face> face);
+	static float calculateDataForFace(const std::shared_ptr<Face>& face);
 };

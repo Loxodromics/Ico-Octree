@@ -162,9 +162,9 @@ void Icosphere::subdivideFace(const std::shared_ptr<Face> &face, unsigned int cu
 		<< face->getVertexIndices()[2] << "): " << currentLevel << " : " << targetLevel << std::endl;
 
 	/// Calculate midpoints and create new vertices (if necessary)
-	unsigned int mid1 = getOrCreateMidpointIndex(face->getVertexIndices()[0], face->getVertexIndices()[1]);
-	unsigned int mid2 = getOrCreateMidpointIndex(face->getVertexIndices()[1], face->getVertexIndices()[2]);
-	unsigned int mid3 = getOrCreateMidpointIndex(face->getVertexIndices()[2], face->getVertexIndices()[0]);
+	const unsigned int mid1 = getOrCreateMidpointIndex(face->getVertexIndices()[0], face->getVertexIndices()[1]);
+	const unsigned int mid2 = getOrCreateMidpointIndex(face->getVertexIndices()[1], face->getVertexIndices()[2]);
+	const unsigned int mid3 = getOrCreateMidpointIndex(face->getVertexIndices()[2], face->getVertexIndices()[0]);
 
 	/// Create new faces using the original vertices and the new midpoints
 	std::array<std::shared_ptr<Face>, 4> newFaces = {

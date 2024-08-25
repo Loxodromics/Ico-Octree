@@ -27,19 +27,19 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Face& face);
 
 	void setData(float value);
-	float getData() const;
+	[[nodiscard]] float getData() const;
 
 	void setNeighbor(unsigned int index, std::shared_ptr<Face> neighbor);
-	void addNeighbor(std::shared_ptr<Face> neighbor);
-	std::shared_ptr<Face> getNeighbor(unsigned int index) const;
+	void addNeighbor(const std::shared_ptr<Face>& neighbor);
+	[[nodiscard]] std::shared_ptr<Face> getNeighbor(unsigned int index) const;
 	void setChild(unsigned int index, std::shared_ptr<Face> child);
-	void addChild(std::shared_ptr<Face> child);
-	std::shared_ptr<Face> getChild(unsigned int index) const;
-	std::array<std::shared_ptr<Face>, 4> getChildren() const;
+	void addChild(const std::shared_ptr<Face>& child);
+	[[nodiscard]] std::shared_ptr<Face> getChild(unsigned int index) const;
+	[[nodiscard]] std::array<std::shared_ptr<Face>, 4> getChildren() const;
 	void setParent(std::weak_ptr<Face> parent);
-	std::shared_ptr<Face> getParent() const; /// Gets the parent, converting the weak pointer to a shared pointer
+	[[nodiscard]] std::shared_ptr<Face> getParent() const; /// Gets the parent, converting the weak pointer to a shared pointer
 	void setVertexIndices(const std::array<unsigned int, 3>& indices);
-	std::array<unsigned int, 3> getVertexIndices() const;
+	[[nodiscard]] std::array<unsigned int, 3> getVertexIndices() const;
 
 private:
 	/// Default constructor
