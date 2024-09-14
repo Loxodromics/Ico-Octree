@@ -21,6 +21,8 @@ public:
 	static void applyVisitorToFace(const std::shared_ptr<Face> &face, FaceVisitor& visitor);
 	void applyVisitor(FaceVisitor& visitor) const;
 
+	std::shared_ptr<Face> getFaceAtPoint(const Vector3& point) const;
+
 private:
 	/// Copy constructor
 	Icosphere(const Icosphere& other);
@@ -40,9 +42,17 @@ private:
 	void setNeighborsForBaseFaces() const;
 	void setNeighborsForFace(const std::shared_ptr<Face>& face);
 
+	std::shared_ptr<Face> getFaceAtPointRecursive(const std::shared_ptr<Face>& face,
+											  const Vector3& normalizedPoint) const;
+
+	bool intersectsLine(const std::shared_ptr<Face>& face,
+							const Vector3& lineStart, const Vector3& lineEnd) const;
+
 	/// Data
 	std::vector<Vector3> vertices;
 	std::vector<unsigned int> indices;
 	std::map<std::pair<unsigned int, unsigned int>, unsigned int> midpointIndexCache; /// Cache to store midpoints
 	std::vector<std::shared_ptr<Face>> baseFaces;
+
+	static constexpr float EPSILON = 0.0000001f;
 };

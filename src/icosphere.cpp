@@ -52,7 +52,16 @@ void Icosphere::applyVisitor(FaceVisitor& visitor) const {
 		applyVisitorToFace(baseFace, visitor);
 	}
 }
-	
+
+std::shared_ptr<Face> Icosphere::getFaceAtPoint(const Vector3 &point) const {
+	Vector3 normalizedPoint = point.normalized() * 2.0f; /// normalized and multiplied by 2 should definitly intersect with a unit sphere
+	for (const auto& baseFace : baseFaces) {
+		auto result = getFaceAtPointRecursive(baseFace, normalizedPoint);
+		if (result)
+			return result;
+	}
+	return nullptr;
+}
 
 unsigned int Icosphere::addVertex(const Vector3 vertex) {
 	vertices.push_back(vertex);
@@ -319,4 +328,66 @@ void Icosphere::setNeighborsForFace(const std::shared_ptr<Face>& face) {
 		else
 			std::cout << "no child\n";
 	}
+}
+
+std::shared_ptr<Face> Icosphere::getFaceAtPointRecursive(const std::shared_ptr<Face> &face, const Vector3 &normalizedPoint) const {
+	if (!intersectsLine(face, Vector3(0,0,0), normalizedPoint)) {
+		return nullptr;
+	}
+
+	/// If this is a leaf face, return it
+	if (face->getChildren().empty()) {
+		return face;
+	}
+
+	/// Check children
+	for (const auto& child : face->getChildren()) {
+		auto result = getFaceAtPointRecursive(child, normalizedPoint);
+		if (result) return result;
+	}
+
+	return nullptr;
+}
+
+bool Icosphere::intersectsLine(const std::shared_ptr<Face> &face, const Vector3 &lineStart,
+	const Vector3 &lineEnd) const {
+	/// Möller-Trumbore algorithm for intersecting line - triangle
+	/// Get the vertices of the face
+	std::array<unsigned int, 3> vertexIndices = face->getVertexIndices();
+	const Vector3& v0 = vertices[vertexIndices[0]];
+	const Vector3& v1 = vertices[vertexIndices[1]];
+	const Vector3& v2 = vertices[vertexIndices[2]];
+
+	Vector3 direction = lineEnd - lineStart;
+
+	/// Edge vectors
+	Vector3 e1 = v1 - v0;
+	Vector3 e2 = v2 - v0;
+
+	/// Calculate determinant
+	Vector3 pvec = direction.cross(e2);
+	float det = e1.dot(pvec);
+
+	/// If determinant is near zero, ray lies in plane of triangle
+	if (std::fabs(det) < EPSILON) return false;
+
+	float invDet = 1.0f / det;
+
+	/// Calculate u parameter and test bounds
+	Vector3 tvec = lineStart - v0;
+	float u = tvec.dot(pvec) * invDet;
+	if (u < 0.0f || u > 1.0f) return false;
+
+	/// Prepare to test v parameter
+	Vector3 qvec = tvec.cross(e1);
+
+	/// Calculate v parameter and test bounds
+	float v = direction.dot(qvec) * invDet;
+	if (v < 0.0f || u + v > 1.0f) return false;
+
+	/// Calculate t, ray intersects triangle
+	float t = e2.dot(qvec) * invDet;
+
+	/// Check if the intersection point is between lineStart and lineEnd
+	return (t >= 0.0f && t <= 1.0f);
 }
