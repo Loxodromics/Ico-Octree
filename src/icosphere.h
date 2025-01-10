@@ -5,13 +5,14 @@
 #include <vector>
 #include <map>
 
+namespace lillugsi::planet {
 class Icosphere {
 public:
 	Icosphere();
 	~Icosphere();
 
 	/// Methods for icosphere generation and manipulation
-	void subdivide(int levels); // Adds a method to subdivide the icosphere
+	void subdivide(int levels);
 
 	/// Accessors
 	[[nodiscard]] std::vector<Vector3> getVertices() const;
@@ -56,3 +57,4 @@ private:
 
 	static constexpr float EPSILON = 0.0000001f;
 };
+} /// namespace lillugsi::planet

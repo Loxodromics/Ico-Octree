@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <iostream>
 
-
+namespace lillugsi::planet {
 Face::Face(const std::array<unsigned int, 3>& vertexIndices)
 : vertexIndices(vertexIndices) {
 
@@ -103,3 +103,4 @@ std::shared_ptr<Face> Face::getParent() const {
 std::array<unsigned int, 3> Face::getVertexIndices() const {
 	return this->vertexIndices;
 }
+} /// namespace lillugsi::planet

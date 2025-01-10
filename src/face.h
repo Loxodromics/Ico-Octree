@@ -5,6 +5,7 @@
 #include <memory> /// Include for smart pointers
 #include <iostream>
 
+namespace lillugsi::planet {
 class Face {
 public:
 	/// Constructor with vertex indices
@@ -58,3 +59,4 @@ public:
 	virtual ~FaceVisitor() = default;
 	virtual void visit(std::shared_ptr<Face> face) = 0;
 };
+} /// namespace lillugsi::planet

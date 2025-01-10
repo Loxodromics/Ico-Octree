@@ -7,6 +7,7 @@
 #include <map>
 #include <iostream>
 
+namespace lillugsi::planet {
 Icosphere::Icosphere() {
 	this->initializeBaseIcosahedron();
 }
@@ -391,3 +392,4 @@ bool Icosphere::intersectsLine(const std::shared_ptr<Face> &face, const Vector3 
 	/// Check if the intersection point is between lineStart and lineEnd
 	return (t >= 0.0f && t <= 1.0f);
 }
+} /// namespace lillugsi::planet

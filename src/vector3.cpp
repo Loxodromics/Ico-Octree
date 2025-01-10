@@ -1,6 +1,8 @@
 #include "vector3.h"
 #include <cmath> /// For sqrt
 
+namespace lillugsi::planet {
+
 /// Default constructor initializes to zero vector
 Vector3::Vector3() : x(0.0f), y(0.0f), z(0.0f) {}
 
@@ -52,3 +54,4 @@ Vector3 Vector3::normalized() const {
 		return {x, y, z}; /// Return the original vector if length is 0 to avoid division by zero
 	}
 }
+} /// namespace lillugsi::planet

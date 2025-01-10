@@ -3,11 +3,10 @@
 #include "datasettingvisitor.h"
 
 int main() {
-
-	Icosphere icosphere;
+	lillugsi::planet::Icosphere icosphere;
 	icosphere.subdivide(2);
 
-	DataSettingVisitor dataVisitor;
+	lillugsi::planet::DataSettingVisitor dataVisitor;
 	icosphere.applyVisitor(dataVisitor);
 
 	return 0;
